@@ -7,6 +7,8 @@ Your animal doors will open automatically at the time you specified in the confi
 
 If that time never occurs during the day (for instance, you specified 730 (meaning 7:30 am) but you woke up after that time because you passed out in the mines) the doors will still open unless it is past your specified doors close time.
 
+Doors will not open in the Winter or on Rainy/Thunder Stormy days.
+
 You could disable the animal doors opening automatically by setting the time to anything larger than your animal door close time.
 
 ### Closing animal doors automatically
