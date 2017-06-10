@@ -13,7 +13,7 @@ namespace AutoAnimalDoors
             base.Entry(helper);
             Logger.Instance.Initialize(this.Monitor);
             config = helper.ReadConfig<ModConfig>();
-            StardewModdingAPI.Events.TimeEvents.DayOfMonthChanged += this.SetupAutoDoorCallbacks;
+            StardewModdingAPI.Events.TimeEvents.AfterDayStarted += SetupAutoDoorCallbacks;
         }
 
         private bool IsGoToSleepDialog(StardewValley.Menus.IClickableMenu menu)
@@ -40,7 +40,7 @@ namespace AutoAnimalDoors
             }
         }
 
-        private void SetupAutoDoorCallbacks(object sender, StardewModdingAPI.Events.EventArgsIntChanged dayOfMonthChanged)
+        private void SetupAutoDoorCallbacks(object sender, System.EventArgs eventArgs)
         {
             Game game = Game.Instance;
             if (game.IsLoaded())
@@ -83,7 +83,7 @@ namespace AutoAnimalDoors
 
         private void OpenAnimalDoors(object sender, StardewModdingAPI.Events.EventArgsIntChanged timeOfDayChanged)
         {
-            if (timeOfDayChanged.NewInt >= config.AnimalDoorOpenTime)
+            if (timeOfDayChanged.NewInt >= config.AnimalDoorOpenTime && timeOfDayChanged.NewInt < config.AnimalDoorCloseTime)
             {
                 StardewModdingAPI.Events.TimeEvents.TimeOfDayChanged -= this.OpenAnimalDoors;
                 SetAnimalDoorsState(Buildings.AnimalDoorState.OPEN);
