@@ -10,8 +10,6 @@ namespace AutoAnimalDoors
 
         public override void Entry(StardewModdingAPI.IModHelper helper)
         {
-            base.Entry(helper);
-            Logger.Instance.Initialize(this.Monitor);
             config = helper.ReadConfig<ModConfig>();
             StardewModdingAPI.Events.TimeEvents.AfterDayStarted += SetupAutoDoorCallbacks;
         }
@@ -21,7 +19,7 @@ namespace AutoAnimalDoors
             StardewValley.Menus.DialogueBox dialogBox = menu as StardewValley.Menus.DialogueBox;
             if (dialogBox != null)
             {
-                List<string> dialogs = this.Helper.Reflection.GetPrivateValue<List<string>>(dialogBox, "dialogues");
+                List<string> dialogs = this.Helper.Reflection.GetField<List<string>>(dialogBox, "dialogues").GetValue();
                 if (dialogs != null && dialogs.Count >= 1)
                 {
                     return dialogs[0].Equals(StardewValley.Game1.content.LoadString("Strings\\Locations:FarmHouse_Bed_GoToSleep"));
