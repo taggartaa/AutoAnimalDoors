@@ -17,7 +17,7 @@ namespace AutoAnimalDoors.StardewValleyWrapper.Buildings
         {
             get
             {
-                return this.building.indoors as StardewValley.AnimalHouse;
+                return this.building.indoors.Get() as StardewValley.AnimalHouse;
             }
         }
 
@@ -57,8 +57,7 @@ namespace AutoAnimalDoors.StardewValleyWrapper.Buildings
                 int xPositionOfAnimalDoor = this.building.animalDoor.X + this.building.tileX;
                 int yPositionOfAnimalDoor = this.building.animalDoor.Y + this.building.tileY;
 
-                // Pass in null as Farmer as who cares which farmer opened the door, hopefully doesn't cause issues in later update!
-                this.building.doAction(new Microsoft.Xna.Framework.Vector2(xPositionOfAnimalDoor, yPositionOfAnimalDoor), null);
+                this.building.doAction(new Microsoft.Xna.Framework.Vector2(xPositionOfAnimalDoor, yPositionOfAnimalDoor), StardewValley.Game1.player);
             }
         }
 
