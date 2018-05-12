@@ -70,11 +70,20 @@ namespace AutoAnimalDoors.StardewValleyWrapper
 
         public void SendAllAnimalsHome()
         {
+            SetAnimalDoorsState(StardewValleyWrapper.Buildings.AnimalDoorState.CLOSED);
             var farmAnimals = farm.animals;
             for (int i = farmAnimals.Count - 1; i >= 0; i--) 
             {
                 StardewValley.FarmAnimal farmAnimal = farm.animals.ElementAt(i).Value;
                 farmAnimal.warpHome(farm, farmAnimal);
+            }
+        }
+
+        public void SetAnimalDoorsState(Buildings.AnimalDoorState state)
+        {
+            foreach (Buildings.AnimalBuilding animalBuilding in this.AnimalBuildings)
+            {
+                animalBuilding.AnimalDoorState = state;
             }
         }
     }

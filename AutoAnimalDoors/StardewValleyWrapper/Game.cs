@@ -1,4 +1,6 @@
 ﻿
+using System.Collections.Generic;
+
 namespace AutoAnimalDoors.StardewValleyWrapper
 {
     public enum Weather { SNOWING, RAINING, LIGHTNING, SUNNY, WINDY };
@@ -27,11 +29,21 @@ namespace AutoAnimalDoors.StardewValleyWrapper
             }
         }
 
-        public Farm Farm
+        public List<Farm> Farms
         {
             get
             {
-                return new Farm(StardewValley.Game1.getFarm());
+                List<Farm> farms = new List<Farm>();
+                farms.Add(new Farm(StardewValley.Game1.getFarm()));
+
+                // Look for custom farms as well
+                foreach (StardewValley.GameLocation location in StardewValley.Game1.locations) {
+                    if (location.GetType().IsSubclassOf(typeof(StardewValley.Farm)))
+                    {
+                        farms.Add(new Farm((StardewValley.Farm)location));
+                    }
+                }
+                return farms;
             }
 
         }

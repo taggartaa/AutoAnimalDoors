@@ -10,6 +10,7 @@ namespace AutoAnimalDoors
 
         public override void Entry(StardewModdingAPI.IModHelper helper)
         {
+            Logger.Instance.Initialize(this.Monitor);
             config = helper.ReadConfig<ModConfig>();
             StardewModdingAPI.Events.TimeEvents.AfterDayStarted += SetupAutoDoorCallbacks;
         }
@@ -33,8 +34,10 @@ namespace AutoAnimalDoors
         {
             if (IsGoToSleepDialog(menuChangedEventArgs.NewMenu))
             {
-                SetAnimalDoorsState(Buildings.AnimalDoorState.CLOSED);
-                Game.Instance.Farm.SendAllAnimalsHome();
+                foreach (Farm farm in Game.Instance.Farms)
+                {
+                    farm.SendAllAnimalsHome();
+                }
             }
         }
 
@@ -57,12 +60,11 @@ namespace AutoAnimalDoors
             }
         }
 
-        private void SetAnimalDoorsState(Buildings.AnimalDoorState state)
+        private void SetAllAnimalDoorsState(Buildings.AnimalDoorState state)
         {
-            Farm farm = Game.Instance.Farm;
-            foreach (Buildings.AnimalBuilding animalBuilding in farm.AnimalBuildings)
+            foreach (Farm farm in Game.Instance.Farms)
             {
-                animalBuilding.AnimalDoorState = state;
+                farm.SetAnimalDoorsState(state);
             }
         }
 
@@ -70,11 +72,21 @@ namespace AutoAnimalDoors
         {
             if (timeOfDayChanged.NewInt >= config.AnimalDoorCloseTime)
             {
-                Farm farm = Game.Instance.Farm;
-                if (farm.AreAllAnimalsHome())
+                bool allAnimalsInAllFarmsAreHome = true;
+                foreach (Farm farm in Game.Instance.Farms)
+                {
+                    if (farm.AreAllAnimalsHome())
+                    {
+                        farm.SetAnimalDoorsState(Buildings.AnimalDoorState.CLOSED);
+                    }
+                    else
+                    {
+                        allAnimalsInAllFarmsAreHome = false;
+                    }
+                }
+                if (allAnimalsInAllFarmsAreHome)
                 {
                     StardewModdingAPI.Events.TimeEvents.TimeOfDayChanged -= this.CloseAnimalDoors;
-                    SetAnimalDoorsState(Buildings.AnimalDoorState.CLOSED);
                 }
             }
         }
@@ -84,7 +96,7 @@ namespace AutoAnimalDoors
             if (timeOfDayChanged.NewInt >= config.AnimalDoorOpenTime && timeOfDayChanged.NewInt < config.AnimalDoorCloseTime)
             {
                 StardewModdingAPI.Events.TimeEvents.TimeOfDayChanged -= this.OpenAnimalDoors;
-                SetAnimalDoorsState(Buildings.AnimalDoorState.OPEN);
+                SetAllAnimalDoorsState(Buildings.AnimalDoorState.OPEN);
             }
         }
     }
