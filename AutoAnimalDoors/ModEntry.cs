@@ -51,9 +51,15 @@ namespace AutoAnimalDoors
                 StardewModdingAPI.Events.TimeEvents.TimeOfDayChanged -= this.OpenAnimalDoors;
                 StardewModdingAPI.Events.TimeEvents.TimeOfDayChanged -= this.CloseAnimalDoors;
 
-                if (game.Season != Season.WINTER && (game.Weather == Weather.SUNNY || game.Weather == Weather.WINDY))
+                bool skipDueToWinter = !config.OpenDoorsDuringWinter && game.Season == Season.WINTER;
+                bool skipDueToWeather = !config.OpenDoorsWhenRaining && (game.Weather == Weather.RAINING || game.Weather == Weather.LIGHTNING);
+                if (!skipDueToWinter && !skipDueToWeather)
                 {
-                    StardewModdingAPI.Events.TimeEvents.TimeOfDayChanged += this.OpenAnimalDoors;
+                    if (config.AutoOpenEnabled)
+                    {
+                        StardewModdingAPI.Events.TimeEvents.TimeOfDayChanged += this.OpenAnimalDoors;
+                    }
+                    
                     StardewModdingAPI.Events.TimeEvents.TimeOfDayChanged += this.CloseAnimalDoors;
                     StardewModdingAPI.Events.MenuEvents.MenuChanged += this.OnMenuChanged;
                 }
