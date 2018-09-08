@@ -43,6 +43,13 @@ namespace AutoAnimalDoors
 
         private void SetupAutoDoorCallbacks(object sender, System.EventArgs eventArgs)
         {
+            // Disable mod if not the main player (only one player needs to open/close the doors
+            if (!StardewModdingAPI.Context.IsMainPlayer)
+            {
+                StardewModdingAPI.Events.TimeEvents.AfterDayStarted -= SetupAutoDoorCallbacks;
+                return;
+            }
+
             Game game = Game.Instance;
             if (game.IsLoaded())
             {

@@ -71,10 +71,12 @@ namespace AutoAnimalDoors.StardewValleyWrapper
         public void SendAllAnimalsHome()
         {
             SetAnimalDoorsState(StardewValleyWrapper.Buildings.AnimalDoorState.CLOSED);
-            var farmAnimals = farm.animals;
-            for (int i = farmAnimals.Count - 1; i >= 0; i--) 
+
+            var farmAnimals = farm.animals.Values.ToList();
+            // Warping them home causes them to be removed from the farm.animals dictionary, so copy the list as an iterator
+            // will not work. I also don't want to rely on the elements being removed because that may be changed in the future
+            foreach (var farmAnimal in farmAnimals)
             {
-                StardewValley.FarmAnimal farmAnimal = farm.animals.ElementAt(i).Value;
                 farmAnimal.warpHome(farm, farmAnimal);
             }
         }

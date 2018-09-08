@@ -17,7 +17,7 @@ namespace AutoAnimalDoors.StardewValleyWrapper.Buildings
         {
             get
             {
-                return this.building.indoors as StardewValley.AnimalHouse;
+                return this.building.indoors.Get() as StardewValley.AnimalHouse;
             }
         }
 
@@ -38,7 +38,7 @@ namespace AutoAnimalDoors.StardewValleyWrapper.Buildings
         {
             get
             {
-                return building.animalDoorOpen ? AnimalDoorState.OPEN : AnimalDoorState.CLOSED;
+                return building.animalDoorOpen.Value ? AnimalDoorState.OPEN : AnimalDoorState.CLOSED;
             }
 
             set
@@ -52,19 +52,18 @@ namespace AutoAnimalDoors.StardewValleyWrapper.Buildings
 
         public void ToggleAnimalDoorState()
         {
-            if (this.building.animalDoor != null && !this.building.isUnderConstruction())
+            if (this.building.animalDoor.Value != null && !this.building.isUnderConstruction())
             {
-                int xPositionOfAnimalDoor = this.building.animalDoor.X + this.building.tileX;
-                int yPositionOfAnimalDoor = this.building.animalDoor.Y + this.building.tileY;
+                int xPositionOfAnimalDoor = this.building.animalDoor.X + this.building.tileX.Value;
+                int yPositionOfAnimalDoor = this.building.animalDoor.Y + this.building.tileY.Value;
 
-                // Pass in null as Farmer as who cares which farmer opened the door, hopefully doesn't cause issues in later update!
-                this.building.doAction(new Microsoft.Xna.Framework.Vector2(xPositionOfAnimalDoor, yPositionOfAnimalDoor), null);
+                this.building.doAction(new Microsoft.Xna.Framework.Vector2(xPositionOfAnimalDoor, yPositionOfAnimalDoor), StardewValley.Game1.player);
             }
         }
 
         public void OpenAnimalDoor()
         {
-            if (!this.building.animalDoorOpen)
+            if (!this.building.animalDoorOpen.Value)
             {
                 this.ToggleAnimalDoorState();
             }
@@ -72,7 +71,7 @@ namespace AutoAnimalDoors.StardewValleyWrapper.Buildings
 
         public void CloseAnimalDoor()
         {
-            if (this.building.animalDoorOpen)
+            if (this.building.animalDoorOpen.Value)
             {
                 this.ToggleAnimalDoorState();
             }
