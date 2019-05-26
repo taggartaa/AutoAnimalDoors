@@ -1,4 +1,5 @@
 ﻿using AutoAnimalDoors.StardewValleyWrapper;
+using AutoAnimalDoors.StardewValleyWrapper.Buildings;
 using System.Collections.Generic;
 using Buildings = AutoAnimalDoors.StardewValleyWrapper.Buildings;
 
@@ -79,7 +80,23 @@ namespace AutoAnimalDoors
         {
             foreach (Farm farm in Game.Instance.Farms)
             {
-                farm.SetAnimalDoorsState(state);
+                foreach(AnimalBuilding animalBuilding in farm.AnimalBuildings)
+                {
+                    if (animalBuilding.Type == AnimalBuildingType.COOP)
+                    {
+                        if (animalBuilding.UpgradeLevel >= config.CoopRequiredUpgradeLevel)
+                        {
+                            animalBuilding.AnimalDoorState = state;
+                        }
+                    }
+                    else if (animalBuilding.Type == AnimalBuildingType.BARN)
+                    {
+                        if (animalBuilding.UpgradeLevel >= config.BarnRequiredUpgradeLevel)
+                        {
+                            animalBuilding.AnimalDoorState = state;
+                        }
+                    }
+                }
             }
         }
 
