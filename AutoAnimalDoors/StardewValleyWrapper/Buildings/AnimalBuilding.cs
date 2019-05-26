@@ -5,6 +5,8 @@ namespace AutoAnimalDoors.StardewValleyWrapper.Buildings
 {
     public enum AnimalDoorState { OPEN, CLOSED };
 
+    public enum AnimalBuildingType { BARN, COOP, OTHER };
+
     class AnimalBuilding : Building
     {
         public AnimalBuilding(StardewValley.Buildings.Building building) :
@@ -76,5 +78,44 @@ namespace AutoAnimalDoors.StardewValleyWrapper.Buildings
                 this.ToggleAnimalDoorState();
             }
         }
+
+        public AnimalBuildingType Type
+        {
+            get
+            {
+                string buildingTypeString = this.building.buildingType.Value.ToLower();
+                if (buildingTypeString.Contains("coop"))
+                {
+                    return AnimalBuildingType.COOP;
+                } else if (buildingTypeString.Contains("barn"))
+                {
+                    return AnimalBuildingType.BARN;
+                }
+
+                return AnimalBuildingType.OTHER;
+            }
+        }
+
+        public int UpgradeLevel
+        {
+            get
+            {
+                switch (this.building.buildingType.Value.ToLower())
+                {
+                    case "coop":
+                    case "barn":
+                        return 1;
+                    case "big coop":
+                    case "big barn":
+                        return 2;
+                    case "deluxe coop":
+                    case "deluxe barn":
+                        return 3;
+                }
+
+                return 4;
+            }
+        }
+
     }
 }
