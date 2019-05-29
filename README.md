@@ -49,7 +49,7 @@ You can find it in the mods install directory.
   "AnimalDoorOpenTime": 730,
   "AnimalDoorCloseTime": 1800,
   "CoopRequiredUpgradeLevel": 1,
-  "CoopRequiredUpgradeLevel": 1,
+  "BarnRequiredUpgradeLevel": 1,
   "AutoOpenEnabled": true,
   "OpenDoorsWhenRaining": false,
   "OpenDoorsDuringWinter": false
