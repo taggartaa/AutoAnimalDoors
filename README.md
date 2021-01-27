@@ -1,8 +1,9 @@
 # AutoAnimalDoors
-I appreciate all the support this mod has received! If you'd like to further support my work please use [this link](http://paypal.me/JustKiddingStudios) to donate
-~Thanks :) Aaron
-
 This is a mod created for StardewValley which will automate the animal door opening/closing process for all your barns and coops.
+
+I appreciate all the support this mod has received! If you'd like to further support my work please use this link to [donate](http://paypal.me/JustKiddingStudios)
+
+~Thanks :) Aaron
 
 ## Features
 ### Opening animal doors automatically
