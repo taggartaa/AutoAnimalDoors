@@ -29,7 +29,9 @@ Consequently, you can disable this mod for barns or coops by setting the value t
 
 ## Config File
 
-The config file is where all the options for this mod can be set. It will be automatically created the first time the game is launched with this mod installed.
+Hey, you no longer have to use a config file, I integrated with [Generic Mod Config Menu](https://www.nexusmods.com/stardewvalley/mods/5098). Download and install that mod and configure all these settings in the game! :)
+
+Oh, you'd rather use the config file? That is okay too. The config file is where all the options for this mod can be set. It will be automatically created the first time the game is launched with this mod installed.
 
 You can find it in the mods install directory.
 
