@@ -52,10 +52,17 @@ namespace AutoAnimalDoors
 
         private void SetupAutoDoorCallbacks(object sender, System.EventArgs eventArgs)
         {
-            // Disable mod if not the main player (only one player needs to open/close the doors
-            if (!StardewModdingAPI.Context.IsMainPlayer)
+            // Remove callback for non host computers, no need to keep calling this
+            if (!StardewModdingAPI.Context.IsOnHostComputer)
             {
                 Helper.Events.GameLoop.DayStarted -= SetupAutoDoorCallbacks;
+                return;
+            }
+
+            // Split screen users don't need to close the doors, but can't remove callback since the 
+            // host needs to have this method run for them
+            if (!StardewModdingAPI.Context.IsMainPlayer)
+            {
                 return;
             }
 
