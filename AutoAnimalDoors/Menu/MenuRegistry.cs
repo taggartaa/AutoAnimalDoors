@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using AutoAnimalDoors.Config;
 using AutoAnimalDoors.StardewValleyWrapper;
 using GenericModConfigMenu;
@@ -8,8 +9,23 @@ namespace AutoAnimalDoors.Menu
 {
 	internal class MenuRegistry
 	{
-		private string[] animalBuildingLevelNames = new string[3] { "Normal", "Big", "Deluxe" };
+		private SortedList<int, String> animalBuildingLevelOptions = new SortedList<int, String>()
+        {
+			{ 1, "Normal" },
+			{ 2, "Big" },
+			{ 3, "Deluxe" },
+			{ int.MaxValue, "Disabled" }
+        };
 
+		private string[] animalBuildingLevelNames
+        {
+			get
+            {
+                string[] names = new string[animalBuildingLevelOptions.Count];
+				animalBuildingLevelOptions.Values.CopyTo(names, 0);
+				return names;
+            }
+        }
 
 		private IModHelper Helper { get; set; }
 
@@ -23,6 +39,8 @@ namespace AutoAnimalDoors.Menu
 			IGenericModConfigMenuApi api = Helper.ModRegistry.GetApi<IGenericModConfigMenuApi>("spacechase0.GenericModConfigMenu");
 			if (api != null)
 			{
+				Logger.Instance.Log("Generic Mod Config detected, initializing menu");
+
 				api.RegisterModConfig(manifest, () => config = new ModConfig(), () => Helper.WriteConfig<ModConfig>(config));
 
 				api.RegisterLabel(manifest, "Auto Animal Doors", "");
@@ -45,7 +63,8 @@ namespace AutoAnimalDoors.Menu
 				api.RegisterChoiceOption(manifest, "Coop Required Upgrade Level",
 					"The coop upgrade level required for auto open/close.",
 					() => GetAnimalBuildingUpgradeLevelName(config.CoopRequiredUpgradeLevel),
-					(string newLevel) => config.CoopRequiredUpgradeLevel = GetAnimalBuildingUpgradeLevel(newLevel), animalBuildingLevelNames);
+					(string newLevel) => config.CoopRequiredUpgradeLevel = GetAnimalBuildingUpgradeLevel(newLevel), 
+					animalBuildingLevelNames);
 
 				api.RegisterChoiceOption(manifest, "Barn Required Upgrade Level",
 					"The barn upgrade level required for auto open/close.",
@@ -74,22 +93,22 @@ namespace AutoAnimalDoors.Menu
 
 		private string GetAnimalBuildingUpgradeLevelName(int level)
 		{
-			int num = level - 1;
-			if (num < 0 || num >= animalBuildingLevelNames.Length)
-			{
-				num = 0;
-			}
-			return animalBuildingLevelNames[num];
+            if (animalBuildingLevelOptions.TryGetValue(level, out string upgradeLevelName))
+            {
+				return upgradeLevelName;
+            }
+
+            return animalBuildingLevelOptions.Values[0];
 		}
 
 		private int GetAnimalBuildingUpgradeLevel(string name)
 		{
-			int num = Array.FindIndex(animalBuildingLevelNames, (string element) => element == name);
-			if (num < 0)
+			int index = animalBuildingLevelOptions.IndexOfValue(name);
+			if (index < 0)
 			{
-				num = 0;
+				index = 0;
 			}
-			return num + 1;
+			return animalBuildingLevelOptions.Keys[index];
 		}
 	}
 }

@@ -43,6 +43,7 @@ namespace AutoAnimalDoors
         {
             if (IsGoToSleepDialog(menuChangedEventArgs.NewMenu))
             {
+                Logger.Instance.Log("Entered Bed, Warping Animals Back Now");
                 foreach (Buildings.AnimalBuilding eligibleAnimalBuilding in this.EligibleAnimalBuildings)
                 {
                     eligibleAnimalBuilding.SendAllAnimalsHome();
@@ -55,6 +56,7 @@ namespace AutoAnimalDoors
             // Remove callback for non host computers, no need to keep calling this
             if (!StardewModdingAPI.Context.IsOnHostComputer)
             {
+                Logger.Instance.Log("User is not the host, disabling mod");
                 Helper.Events.GameLoop.DayStarted -= SetupAutoDoorCallbacks;
                 return;
             }
@@ -76,6 +78,17 @@ namespace AutoAnimalDoors
 
                 bool skipDueToWinter = !ModConfig.Instance.OpenDoorsDuringWinter && game.Season == Season.WINTER;
                 bool skipDueToWeather = !ModConfig.Instance.OpenDoorsWhenRaining && (game.Weather == Weather.RAINING || game.Weather == Weather.LIGHTNING);
+                
+                if (skipDueToWinter)
+                {
+                    Logger.Instance.Log("Skipping because it is Winter");
+                }
+
+                else if (skipDueToWeather)
+                {
+                    Logger.Instance.Log("Skipping due to Weather");
+                }
+                
                 if (!skipDueToWinter && !skipDueToWeather)
                 {
                     if (ModConfig.Instance.AutoOpenEnabled)
@@ -130,7 +143,10 @@ namespace AutoAnimalDoors
 
         private void SetAllAnimalDoorsState(Buildings.AnimalDoorState state)
         {
-            foreach (Buildings.AnimalBuilding animalBuilding in this.EligibleAnimalBuildings)
+            List<Buildings.AnimalBuilding> eligibleAnimalBuildings = this.EligibleAnimalBuildings;
+            Logger.Instance.Log(string.Format("Changing state of {0} animal doors to {1}", eligibleAnimalBuildings.Count, state));
+
+            foreach (Buildings.AnimalBuilding animalBuilding in eligibleAnimalBuildings)
             {
                 animalBuilding.AnimalDoorState = state;
             }
