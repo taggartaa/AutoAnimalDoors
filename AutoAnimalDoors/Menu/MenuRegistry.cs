@@ -60,6 +60,11 @@ namespace AutoAnimalDoors.Menu
 					() => config.AnimalDoorCloseTime,
 					(int newOpenTime) => config.AnimalDoorCloseTime = newOpenTime);
 
+				api.RegisterSimpleOption(manifest, "Other Mods Enabled",
+					"Enables or disables the auto opening of animal doors from other mods (I can't control door sounds/animation or test every mod).",
+					() => config.UnrecognizedAnimalBuildingsEnabled,
+					(bool unrecognizedAnimalBulidingsEnabled) => config.UnrecognizedAnimalBuildingsEnabled = unrecognizedAnimalBulidingsEnabled);
+
 				api.RegisterChoiceOption(manifest, "Coop Required Upgrade Level",
 					"The coop upgrade level required for auto open/close.",
 					() => GetAnimalBuildingUpgradeLevelName(config.CoopRequiredUpgradeLevel),

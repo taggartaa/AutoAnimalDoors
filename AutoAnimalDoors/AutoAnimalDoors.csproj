@@ -60,6 +60,7 @@
     <Compile Include="StardewValleyWrapper\Buildings\Barn.cs" />
     <Compile Include="StardewValleyWrapper\Buildings\Building.cs" />
     <Compile Include="StardewValleyWrapper\Buildings\Coop.cs" />
+    <Compile Include="StardewValleyWrapper\Buildings\UnrecognizedAnimalBuilding.cs" />
     <Compile Include="StardewValleyWrapper\Farm.cs" />
     <Compile Include="StardewValleyWrapper\Game.cs" />
     <Compile Include="ModEntry.cs" />
