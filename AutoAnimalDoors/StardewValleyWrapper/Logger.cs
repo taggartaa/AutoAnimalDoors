@@ -1,7 +1,7 @@
 ﻿
 namespace AutoAnimalDoors.StardewValleyWrapper
 {
-    class Logger
+    public class Logger
     {
         private static Logger logger;
 

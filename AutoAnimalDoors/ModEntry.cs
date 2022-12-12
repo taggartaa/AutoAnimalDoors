@@ -1,13 +1,27 @@
 ﻿using AutoAnimalDoors.Menu;
 using AutoAnimalDoors.StardewValleyWrapper;
 using StardewModdingAPI.Events;
+using System;
 using System.Collections.Generic;
 using Buildings = AutoAnimalDoors.StardewValleyWrapper.Buildings;
 
 namespace AutoAnimalDoors
 {
-    class ModEntry : StardewModdingAPI.Mod
+    public class ModEntry : StardewModdingAPI.Mod
     {
+        public static bool HasDoorsClosedToday
+        {
+            get;
+            set;
+        } = false;
+
+        public static bool HasDoorsOpenedToday
+        {
+            get;
+            set;
+        } = false;
+
+
         private MenuRegistry GenericMenuRegistry { get; set; }
 
         public override void Entry(StardewModdingAPI.IModHelper helper)
@@ -17,11 +31,28 @@ namespace AutoAnimalDoors
             ModConfig.Instance = Helper.ReadConfig<ModConfig>();
             helper.Events.GameLoop.DayStarted += SetupAutoDoorCallbacks;
             helper.Events.GameLoop.GameLaunched += SetupMenu;
+            helper.Events.GameLoop.ReturnedToTitle += ReturnedToTitle;
+        }
+
+        private void ReturnedToTitle(object sender, ReturnedToTitleEventArgs e)
+        {
+            HasDoorsOpenedToday = false;
+            HasDoorsClosedToday = false;
         }
 
         private void SetupMenu(object sender, GameLaunchedEventArgs e)
         {
             GenericMenuRegistry.InitializeMenu(ModManifest, ModConfig.Instance);
+            GenericMenuRegistry.AutoOpenedEnabledChanged += AutoOpenedEnabledChanged;
+        }
+
+        private void AutoOpenedEnabledChanged(object sender, bool autoOpenEnabled)
+        {
+            SetupAutoDoorCallbacks();
+            if (ModConfig.Instance.AutoOpenEnabled && Game.Instance.IsLoaded())
+            {
+                OpenAnimalDoors(Game.Instance.CurrentTime);
+            }
         }
 
         private bool IsGoToSleepDialog(StardewValley.Menus.IClickableMenu menu)
@@ -51,8 +82,15 @@ namespace AutoAnimalDoors
             }
         }
 
-        private void SetupAutoDoorCallbacks(object sender, System.EventArgs eventArgs)
+        private void SetupAutoDoorCallbacks(object sender, System.EventArgs eventArg)
         {
+            SetupAutoDoorCallbacks();
+        }
+        private void SetupAutoDoorCallbacks()
+        {
+            ModEntry.HasDoorsClosedToday = false;
+            ModEntry.HasDoorsOpenedToday = false;
+
             // Remove callback for non host computers, no need to keep calling this
             if (!StardewModdingAPI.Context.IsOnHostComputer)
             {
@@ -78,27 +116,26 @@ namespace AutoAnimalDoors
 
                 bool skipDueToWinter = !ModConfig.Instance.OpenDoorsDuringWinter && game.Season == Season.WINTER;
                 bool skipDueToWeather = !ModConfig.Instance.OpenDoorsWhenRaining && (game.Weather == Weather.RAINING || game.Weather == Weather.LIGHTNING);
-                
+
                 if (skipDueToWinter)
                 {
                     Logger.Instance.Log("Skipping because it is Winter");
+                    return;
                 }
 
                 else if (skipDueToWeather)
                 {
                     Logger.Instance.Log("Skipping due to Weather");
+                    return;
                 }
-                
-                if (!skipDueToWinter && !skipDueToWeather)
-                {
-                    if (ModConfig.Instance.AutoOpenEnabled)
-                    {
-                        Helper.Events.GameLoop.TimeChanged += this.OpenAnimalDoors;
-                    }
 
-                    Helper.Events.GameLoop.TimeChanged += this.CloseAnimalDoors;
-                    Helper.Events.Display.MenuChanged += this.OnMenuChanged;
+                if (ModConfig.Instance.AutoOpenEnabled)
+                {
+                    Helper.Events.GameLoop.TimeChanged += this.OpenAnimalDoors;
                 }
+
+                Helper.Events.GameLoop.TimeChanged += this.CloseAnimalDoors;
+                Helper.Events.Display.MenuChanged += this.OnMenuChanged;
             }
         }
 
@@ -107,7 +144,8 @@ namespace AutoAnimalDoors
             if (type == Buildings.AnimalBuildingType.BARN)
             {
                 return ModConfig.Instance.BarnRequiredUpgradeLevel;
-            } else if (type == Buildings.AnimalBuildingType.COOP)
+            }
+            else if (type == Buildings.AnimalBuildingType.COOP)
             {
                 return ModConfig.Instance.CoopRequiredUpgradeLevel;
             }
@@ -166,17 +204,24 @@ namespace AutoAnimalDoors
                 }
 
                 SetAllAnimalDoorsState(Buildings.AnimalDoorState.CLOSED);
+                ModEntry.HasDoorsClosedToday = true;
                 Helper.Events.GameLoop.TimeChanged -= this.CloseAnimalDoors;
+            }
+        }
+
+        private void OpenAnimalDoors(int currentTime)
+        {
+            if (currentTime >= ModConfig.Instance.AnimalDoorOpenTime && currentTime < ModConfig.Instance.AnimalDoorCloseTime)
+            {
+                ModEntry.HasDoorsOpenedToday = true;
+                Helper.Events.GameLoop.TimeChanged -= this.OpenAnimalDoors;
+                SetAllAnimalDoorsState(Buildings.AnimalDoorState.OPEN);
             }
         }
 
         private void OpenAnimalDoors(object sender, StardewModdingAPI.Events.TimeChangedEventArgs timeOfDayChanged)
         {
-            if (timeOfDayChanged.NewTime >= ModConfig.Instance.AnimalDoorOpenTime && timeOfDayChanged.NewTime < ModConfig.Instance.AnimalDoorCloseTime)
-            {
-                Helper.Events.GameLoop.TimeChanged -= this.OpenAnimalDoors;
-                SetAllAnimalDoorsState(Buildings.AnimalDoorState.OPEN);
-            }
+            OpenAnimalDoors(timeOfDayChanged.NewTime);
         }
     }
 }

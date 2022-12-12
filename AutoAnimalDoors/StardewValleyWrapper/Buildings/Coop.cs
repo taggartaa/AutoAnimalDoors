@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace AutoAnimalDoors.StardewValleyWrapper.Buildings
 {
-    class Coop : AnimalBuilding
+    public class Coop : AnimalBuilding
     {
         private StardewValley.Buildings.Coop StardewCoop { get; set; }
 

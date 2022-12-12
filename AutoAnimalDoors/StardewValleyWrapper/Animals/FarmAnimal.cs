@@ -1,6 +1,6 @@
 ﻿namespace AutoAnimalDoors.StardewValleyWrapper.Animals
 {
-    class FarmAnimal
+    public class FarmAnimal
     {
         private StardewValley.FarmAnimal farmAnimal;
 

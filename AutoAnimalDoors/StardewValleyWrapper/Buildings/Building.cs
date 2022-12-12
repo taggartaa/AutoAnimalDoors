@@ -1,7 +1,7 @@
 ﻿
 namespace AutoAnimalDoors.StardewValleyWrapper.Buildings
 {
-    class Building
+    public class Building
     {
         protected StardewValley.Buildings.Building building;
 

@@ -2,7 +2,7 @@
 
 namespace AutoAnimalDoors.StardewValleyWrapper
 {
-    class Farm
+    public class Farm
     {
         public StardewValley.Farm StardewValleyFarm { get; private set; }
 
@@ -30,7 +30,8 @@ namespace AutoAnimalDoors.StardewValleyWrapper
                             buildings.Add(new Buildings.Coop(stardewBuilding as StardewValley.Buildings.Coop, this));
                         }
                         else if (ModConfig.Instance.UnrecognizedAnimalBuildingsEnabled &&
-                            stardewBuilding.animalDoor?.X >= 0 && stardewBuilding.animalDoor?.Y >= 0)
+                            stardewBuilding.animalDoor?.X >= 0 && stardewBuilding.animalDoor?.Y >= 0 &&
+                            stardewBuilding.indoors.Get() is StardewValley.AnimalHouse)
                         {
                             buildings.Add(new Buildings.UnrecognizedAnimalBuilding(stardewBuilding, this));
                         }
