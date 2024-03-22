@@ -28,7 +28,7 @@ namespace AutoAnimalDoors.StardewValleyWrapper.Buildings
                 }
 
                 Logger.Instance.Log(
-                    string.Format("Animal building {0} has invalid indoor type {1}, name of inddors {2}", this.building, indoors, this.building?.nameOfIndoors),
+                    string.Format("Animal building {0} has invalid indoor type {1}, name of inddors {2}", this.building, indoors, this.building?.indoors.Name),
                     StardewModdingAPI.LogLevel.Warn);
                 return new StardewValley.AnimalHouse();
             }
@@ -59,7 +59,7 @@ namespace AutoAnimalDoors.StardewValleyWrapper.Buildings
                 // Only warp home animals that are still on the farm
                 else if (this.Farm.StardewValleyFarm.animals.ContainsKey(animal.myID.Value))
                 {
-                    animal.warpHome(this.Farm.StardewValleyFarm, animal);
+                    animal.warpHome();
                 }
             }
         }
@@ -97,7 +97,7 @@ namespace AutoAnimalDoors.StardewValleyWrapper.Buildings
                 PlayDoorSound();
 
                 building.animalDoorOpen.Value = !building.animalDoorOpen.Value;
-                AnimateDoorStateChange();
+                //AnimateDoorStateChange();
             }
         }
 
@@ -134,7 +134,7 @@ namespace AutoAnimalDoors.StardewValleyWrapper.Buildings
             }
         }
 
-        abstract protected void AnimateDoorStateChange();
+        //abstract protected void AnimateDoorStateChange();
 
         abstract public AnimalBuildingType Type { get; }
 

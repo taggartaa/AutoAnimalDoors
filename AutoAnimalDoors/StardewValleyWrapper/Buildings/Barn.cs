@@ -10,9 +10,9 @@ namespace AutoAnimalDoors.StardewValleyWrapper.Buildings
 {
     public class Barn : AnimalBuilding
     {
-        private StardewValley.Buildings.Barn StardewBarn { get; set; }
+        private StardewValley.Buildings.Building StardewBarn { get; set; }
 
-        public Barn(StardewValley.Buildings.Barn barn, Farm farm) :
+        public Barn(StardewValley.Buildings.Building barn, Farm farm) :
             base(barn, farm)
         {
             StardewBarn = barn;
@@ -38,12 +38,19 @@ namespace AutoAnimalDoors.StardewValleyWrapper.Buildings
             }
         }
 
-        protected override void AnimateDoorStateChange()
-        {
-            // Need to use reflection to animate the door changing state because it is private
-            var prop = StardewBarn.GetType().GetField("animalDoorMotion", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-            NetInt animalDoorMotion = prop.GetValue(StardewBarn) as NetInt;
-            animalDoorMotion.Value = StardewBarn.animalDoorOpen.Value ? (-3) : 2;
-        }
+        //protected override void AnimateDoorStateChange()
+        //{
+        //    try
+        //    {
+        //        // Need to use reflection to animate the door changing state because it is private
+        //        var prop = StardewBarn.GetType().GetField("animalDoorMotion", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+        //        NetInt animalDoorMotion = prop.GetValue(StardewBarn) as NetInt;
+        //        animalDoorMotion.Value = StardewBarn.animalDoorOpen.Value ? (-3) : 2;
+        //    }
+        //    catch (Exception)
+        //    {
+        //        Logger.Instance.Log("Motion nicht möglich");
+        //    }
+        //}
     }
 }

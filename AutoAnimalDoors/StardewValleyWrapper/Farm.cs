@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using StardewModdingAPI;
+using StardewValley;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace AutoAnimalDoors.StardewValleyWrapper
 {
@@ -41,7 +44,6 @@ namespace AutoAnimalDoors.StardewValleyWrapper
                         }
                     }
                 }
-
                 return buildings;
             }
         }
