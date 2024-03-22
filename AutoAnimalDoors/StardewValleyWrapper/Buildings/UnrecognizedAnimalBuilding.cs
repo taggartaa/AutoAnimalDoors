@@ -16,9 +16,9 @@ namespace AutoAnimalDoors.StardewValleyWrapper.Buildings
 
         public override int UpgradeLevel => 1;
 
-        protected override void AnimateDoorStateChange()
-        {
+        //protected override void AnimateDoorStateChange()
+        //{
 
-        }
+        //}
     }
 }
