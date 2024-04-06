@@ -123,9 +123,15 @@ namespace AutoAnimalDoors.Menu
                     getValue: () => config.DoorSoundSetting.Name(),
                     setValue: (string doorSoundSettingName) => config.DoorSoundSetting = DoorSoundSettingUtils.FromName(doorSoundSettingName),
                     allowedValues: DoorSoundSettingUtils.Names);
+                
+                api.AddBoolOption(mod: manifest,
+                    name: () => "Show Popups",
+                    tooltip: () => "If enabled, shows a popup when all doors have been closed / opened.",
+                    getValue: () => config.DoorEventPopupEnabled,
+                    setValue: (bool doorClosePopupEnabled) => config.DoorEventPopupEnabled = doorClosePopupEnabled);
 
                 api.AddBoolOption(mod: manifest,
-                    name: () => "Close all at once",
+                    name: () => "Close All At Once",
                     tooltip: () => "If enabled all doors are closed at once when all animals are inside. Otherwise it closes when all animals of a single building are inside.",
                     getValue: () => config.CloseAllBuildingsAtOnce,
                     setValue: (bool closeAllAtOnce) => config.CloseAllBuildingsAtOnce = closeAllAtOnce);

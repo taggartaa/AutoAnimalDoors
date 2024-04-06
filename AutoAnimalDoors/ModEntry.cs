@@ -204,17 +204,20 @@ namespace AutoAnimalDoors
                 {
                     foreach (Buildings.AnimalBuilding animalBuilding in eligibleAnimalBuildings)
                     {
-                        if (animalBuilding.AreAllAnimalsHome() && animalBuilding.AnimalDoorState == Buildings.AnimalDoorState.OPEN)
+                        if (animalBuilding.AnimalDoorState == Buildings.AnimalDoorState.OPEN && animalBuilding.AreAllAnimalsHome())
                         {
                             animalBuilding.AnimalDoorState = Buildings.AnimalDoorState.CLOSED;
                         }
                     }
                 }
 
-                //SetAllAnimalDoorsState(Buildings.AnimalDoorState.CLOSED);
                 if (eligibleAnimalBuildings.All(ab => ab.AnimalDoorState == Buildings.AnimalDoorState.CLOSED))
                 {
-                    Game1.chatBox.addInfoMessage("All animal doors has been closed!");
+                    if (ModConfig.Instance.DoorEventPopupEnabled)
+                    {
+                        Game1.chatBox.addInfoMessage("All animal doors have been closed!");
+                    }
+                    
                     ModEntry.HasDoorsClosedToday = true;
                     Helper.Events.GameLoop.TimeChanged -= this.CloseAnimalDoors;
                 }
@@ -225,7 +228,11 @@ namespace AutoAnimalDoors
         {
             if (currentTime >= ModConfig.Instance.AnimalDoorOpenTime && currentTime < ModConfig.Instance.AnimalDoorCloseTime)
             {
-                Game1.chatBox.addInfoMessage("All animal doors has been opened!");
+                if (ModConfig.Instance.DoorEventPopupEnabled)
+                {
+                    Game1.chatBox.addInfoMessage("All animal doors have been opened!");
+                }
+                
                 ModEntry.HasDoorsOpenedToday = true;
                 Helper.Events.GameLoop.TimeChanged -= this.OpenAnimalDoors;
                 SetAllAnimalDoorsState(Buildings.AnimalDoorState.OPEN);

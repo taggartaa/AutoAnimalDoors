@@ -18,19 +18,19 @@ namespace AutoAnimalDoors.StardewValleyWrapper
         {
             get
             {
-                List<Buildings.Building> buildings = new List<Buildings.Building>();
+                List<Buildings.Building> buildings = new();
 
                 if (this.StardewValleyFarm != null)
                 {
                     foreach (StardewValley.Buildings.Building stardewBuilding in this.StardewValleyFarm.buildings)
                     {
-                        if (stardewBuilding is StardewValley.Buildings.Barn)
+                        if (stardewBuilding.buildingType.Value.EndsWith("Barn"))
                         {
-                            buildings.Add(new Buildings.Barn(stardewBuilding as StardewValley.Buildings.Barn, this));
+                            buildings.Add(new Buildings.Barn(stardewBuilding, this));
                         }
-                        else if (stardewBuilding is StardewValley.Buildings.Coop)
+                        else if (stardewBuilding.buildingType.Value.EndsWith("Coop"))
                         {
-                            buildings.Add(new Buildings.Coop(stardewBuilding as StardewValley.Buildings.Coop, this));
+                            buildings.Add(new Buildings.Coop(stardewBuilding, this));
                         }
                         else if (ModConfig.Instance.UnrecognizedAnimalBuildingsEnabled &&
                             stardewBuilding.animalDoor?.X >= 0 && stardewBuilding.animalDoor?.Y >= 0 &&
@@ -52,7 +52,7 @@ namespace AutoAnimalDoors.StardewValleyWrapper
         {
             get
             {
-                List<Buildings.AnimalBuilding> animalBuildings = new List<Buildings.AnimalBuilding>();
+                List<Buildings.AnimalBuilding> animalBuildings = new();
                 foreach (Buildings.Building building in Buildings)
                 {
                     Buildings.AnimalBuilding animalBuilding = building as Buildings.AnimalBuilding;

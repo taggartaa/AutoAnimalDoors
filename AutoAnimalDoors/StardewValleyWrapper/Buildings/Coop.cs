@@ -1,21 +1,10 @@
-﻿using AutoAnimalDoors.Config;
-using Netcode;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace AutoAnimalDoors.StardewValleyWrapper.Buildings
+﻿namespace AutoAnimalDoors.StardewValleyWrapper.Buildings
 {
     public class Coop : AnimalBuilding
     {
-        private StardewValley.Buildings.Building StardewCoop { get; set; }
-
         public Coop(StardewValley.Buildings.Building coop, Farm farm) :
             base(coop, farm)
         {
-            StardewCoop = coop;
         }
 
         public override AnimalBuildingType Type => AnimalBuildingType.COOP;
@@ -37,20 +26,5 @@ namespace AutoAnimalDoors.StardewValleyWrapper.Buildings
                 return 4;
             }
         }
-
-        //protected override void AnimateDoorStateChange()
-        //{
-        //    try
-        //    {
-        //        // Need to use reflection to animate the door changing state because it is private
-        //        var prop = StardewCoop.GetType().GetField("animalDoorMotion", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-        //        NetInt animalDoorMotion = prop.GetValue(StardewCoop) as NetInt;
-        //        animalDoorMotion.Value = StardewCoop.animalDoorOpen.Value ? (-2) : 2;
-        //    }
-        //    catch (Exception)
-        //    {
-        //        Logger.Instance.Log("Motion nicht möglich");
-        //    }
-        //}
     }
 }
